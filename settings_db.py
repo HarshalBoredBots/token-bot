@@ -16,7 +16,7 @@ def _get_col():
     from dotenv import load_dotenv
     load_dotenv("config.env", override=True)
     db_url  = os.environ.get("DB_URL", "")
-    db_name = os.environ.get("DB_NAME", "filestore")
+    db_name = os.environ.get("DB_NAME", "yue")
     if not db_url:
         raise RuntimeError("DB_URL is empty — check config.env")
     _client = MongoClient(db_url)
@@ -39,10 +39,10 @@ DEFAULTS = {
     "CUSTOM_CAPTION":    "",
     "CHANNEL_BUTTON":    "True",
     "SHORTENER":         "True",
-    "SHORTENER_SITE":    "speedlinkurl.com",
+    "SHORTENER_SITE":    "",
     "SHORTENER_API":     "",
     "HOW_TO_DOWNLOAD":   "",
-    "SHORTENER_PREMIUM": "True",
+    "SHORTENER_PREMIUM": "False",
     "FAKE":              "",
 }
 

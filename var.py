@@ -8,17 +8,31 @@ load_dotenv("config.env", override=True)
 
 # ── Secrets (stay in config.env) ──────────────────────────────────────────────
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
-API_ID    = os.environ.get("API_ID", "")
-API_HASH  = os.environ.get("API_HASH", "")
-OWNER     = [int(x) for x in os.environ.get("OWNER", "").split()]
-ADMINS    = [int(x) for x in os.environ.get("ADMINS", "").split()]
-DB_URL    = os.environ.get("DB_URL", "")
-DB_NAME   = os.environ.get("DB_NAME", "filestore")
+
+# FIX: API_ID must be an int — Pyrogram's Client rejects a string.
+# os.environ always returns a string, so cast here.
+try:
+    API_ID = int(os.environ.get("API_ID", "0"))
+except ValueError:
+    API_ID = 0
+
+API_HASH = os.environ.get("API_HASH", "")
+
+# FIX: Guard against empty OWNER/ADMINS — "".split() returns [] (safe),
+# but a stray space like " ".split() also returns [] so this is fine.
+OWNER  = [int(x) for x in os.environ.get("OWNER",  "").split() if x.strip()]
+ADMINS = [int(x) for x in os.environ.get("ADMINS", "").split() if x.strip()]
+
+DB_URL  = os.environ.get("DB_URL", "")
+# FIX: DB_NAME default aligned to "yue" (matches config.env) instead of "filestore".
+DB_NAME = os.environ.get("DB_NAME", "yue")
 
 DOMAIN         = os.environ.get("DOMAIN", "")
+# FIX: PORT cast to int here so it is always numeric everywhere it is used.
+# On Heroku, $PORT is injected by the platform and must not be overridden in config.env.
 PORT           = int(os.environ.get("PORT", "8084"))
 CURRENT_REPO   = os.environ.get("UPSTREAM_REPO", "")
-CURRENT_BRANCH = os.environ.get("UPSTREAM_BRANCH", "")
+CURRENT_BRANCH = os.environ.get("UPSTREAM_BRANCH", "main")
 
 if DOMAIN:
     DOMAIN = DOMAIN if DOMAIN.endswith("/") else DOMAIN + "/"
@@ -102,7 +116,8 @@ def _seed_from_env():
         "SHORTENER_SITE":    os.environ.get("SHORTENER_SITE", ""),
         "SHORTENER_API":     os.environ.get("SHORTENER_API", ""),
         "HOW_TO_DOWNLOAD":   os.environ.get("HOW_TO_DOWNLOAD", ""),
-        "SHORTENER_PREMIUM": os.environ.get("SHORTENER_PREMIUM", "True"),
+        # FIX: seed uses "False" as default, consistent with config.env.
+        "SHORTENER_PREMIUM": os.environ.get("SHORTENER_PREMIUM", "False"),
         "FAKE":              os.environ.get("FAKE", ""),
     }
     updates = {k: v for k, v in env_map.items() if v}
