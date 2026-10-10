@@ -105,7 +105,7 @@ class Bot(Client):
 
         app = web.AppRunner(await web_server())
         await app.setup()
-        await web.TCPSite(app, "0.0.0.0", PORT).start()
+        await web.TCPSite(app, "0.0.0.0", int(PORT)).start()
 
     async def stop(self, *args):
         await super().stop()

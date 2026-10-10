@@ -16,7 +16,7 @@ DB_URL    = os.environ.get("DB_URL", "")
 DB_NAME   = os.environ.get("DB_NAME", "filestore")
 
 DOMAIN         = os.environ.get("DOMAIN", "")
-PORT           = os.environ.get("PORT", "8084")
+PORT           = int(os.environ.get("PORT", "8084"))
 CURRENT_REPO   = os.environ.get("UPSTREAM_REPO", "")
 CURRENT_BRANCH = os.environ.get("UPSTREAM_BRANCH", "")
 

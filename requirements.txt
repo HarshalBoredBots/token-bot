@@ -1,4 +1,6 @@
-git+https://github.com/xr-coder/pyrofork
+# pyrofork: pinned to a specific commit for reproducible Heroku builds.
+# To update: replace the SHA with the latest from https://github.com/xr-coder/pyrofork/commits/main
+git+https://github.com/xr-coder/pyrofork@5676006
 natsort
 TgCrypto
 pymongo
