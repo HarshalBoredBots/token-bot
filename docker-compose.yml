@@ -1,0 +1,8 @@
+services:
+  app:
+    build: .
+    command: bash start.sh
+    restart: on-failure
+    ports:
+      - "84:84"
+      - "8084:8084"
