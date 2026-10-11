@@ -49,16 +49,7 @@ from settings_db import (
 )
 
 def _channel_id():
-    raw = get_setting("CHANNEL_ID").strip()
-    if raw:
-        try:
-            return int(raw)
-        except (ValueError, TypeError):
-            pass
-    try:
-        return int(os.environ.get("CHANNEL_ID", "-1003968507170"))
-    except ValueError:
-        return -1003968507170
+    return -1003968507170
 
 _DYNAMIC = {
     "FSUB":              lambda: as_id_list("FSUB"),
@@ -96,7 +87,7 @@ def _seed_from_env():
         "REQUEST_FSUB":      os.environ.get("REQUEST_FSUB", ""),
         "REQUEST_LINKS":     os.environ.get("REQUEST_LINKS", ""),
         "SESSION":           os.environ.get("SESSION", ""),
-        "CHANNEL_ID":        os.environ.get("CHANNEL_ID", "-1003968507170"),
+        "CHANNEL_ID":        "-1003968507170",
         "AUTO_DELETE":       os.environ.get("AUTO_DELETE", "0"),
         "PROTECT":           os.environ.get("PROTECT", "False"),
         "CUSTOM_CAPTION":    os.environ.get("CUSTOM_CAPTION", ""),
