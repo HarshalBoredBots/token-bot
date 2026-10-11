@@ -20,8 +20,8 @@ DB_NAME = os.environ.get("DB_NAME", "yue")
 
 DOMAIN         = os.environ.get("DOMAIN", "")
 PORT           = int(os.environ.get("PORT", "8084"))
-CURRENT_REPO   = os.environ.get("UPSTREAM_REPO", "")
-CURRENT_BRANCH = os.environ.get("UPSTREAM_BRANCH", "main")
+CURRENT_REPO   = ""  # Disabled on Heroku — git auto-update overwrites fixes
+CURRENT_BRANCH = "main"
 
 if DOMAIN:
     DOMAIN = DOMAIN if DOMAIN.endswith("/") else DOMAIN + "/"
@@ -72,7 +72,7 @@ _DYNAMIC = {
     "FAKE":              lambda: as_csv_list("FAKE"),
 }
 
-# ── One-time migration: seed config.env → MongoDB if DB has no data ───────────
+# ── One-time migration: seed hardcoded defaults → MongoDB if DB has no data ───
 def _seed_from_env():
     from settings_db import _get_col, DEFAULTS, invalidate_cache
     col = _get_col()
@@ -104,7 +104,7 @@ def _seed_from_env():
         col.update_one({"_id": "settings"}, {"$set": updates}, upsert=True)
         invalidate_cache()
         logging.getLogger(__name__).info(
-            f"[var] Seeded {len(updates)} settings from config.env into MongoDB."
+            f"[var] Seeded {len(updates)} settings into MongoDB."
         )
 
 _seed_from_env()
@@ -120,18 +120,14 @@ class _DynamicModule(_sys.modules[__name__].__class__):
 
 _sys.modules[__name__].__class__ = _DynamicModule
 
-# Make `from var import *` include all dynamic names
 __all__ = [
-    # Secrets
     "BOT_TOKEN", "API_ID", "API_HASH", "OWNER", "ADMINS",
     "DB_URL", "DB_NAME", "DOMAIN", "PORT", "CURRENT_REPO", "CURRENT_BRANCH",
     "LOGGER", "TIME_ZONE",
-    # Dynamic (resolved via __getattr__ at access time)
     "FSUB", "FSUB_LINKS", "FSUB_TIMEOUT",
     "TOGGLE", "REQUEST_FSUB", "REQUEST_LINKS", "SESSION",
     "CHANNEL_ID", "AUTO_DELETE", "PROTECT", "CUSTOM_CAPTION", "CHANNEL_BUTTON",
     "SHORTENER", "SHORTENER_SITE", "SHORTENER_API", "HOW_TO_DOWNLOAD", "SHORTENER_PREMIUM",
     "FAKE",
-    # Helpers
     "_DYNAMIC",
 ]

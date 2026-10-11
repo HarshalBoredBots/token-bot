@@ -13,13 +13,12 @@ def _get_col():
     global _client, _db, _scol
     if _scol is not None:
         return _scol
-    from dotenv import load_dotenv
-    load_dotenv("config.env", override=True)
+    # Read directly from environment (already set by Heroku config vars)
     db_url  = os.environ.get("DB_URL", "")
     db_name = os.environ.get("DB_NAME", "yue")
     if not db_url:
-        raise RuntimeError("DB_URL is empty — check config.env")
-    _client = MongoClient(db_url)
+        raise RuntimeError("DB_URL is not set — add it in Heroku config vars")
+    _client = MongoClient(db_url, serverSelectionTimeoutMS=10000)
     _db     = _client[db_name]
     _scol   = _db["bot_settings"]
     return _scol

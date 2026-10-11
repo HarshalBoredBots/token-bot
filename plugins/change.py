@@ -10,8 +10,6 @@ from urllib.parse import urlparse
 
 
 async def update_github_file(repo_url: str, branch: str, file_name: str, new_content: str):
-    # FIX 16: Guard against missing PAT in URL — original re.search().group(0)
-    # raised AttributeError when no ghp_ token was present in the URL.
     parsed_url = urlparse(repo_url)
     match = re.search(r"ghp_\w+", parsed_url.netloc)
     if not match:
@@ -22,7 +20,7 @@ async def update_github_file(repo_url: str, branch: str, file_name: str, new_con
         return False
     token = match.group(0)
 
-    repo_path  = parsed_url.path.strip("/").split("/")
+    repo_path = parsed_url.path.strip("/").split("/")
     if len(repo_path) < 2:
         LOGGER(__name__).error("[change] Could not parse owner/repo from UPSTREAM_REPO URL.")
         return False
@@ -38,7 +36,6 @@ async def update_github_file(repo_url: str, branch: str, file_name: str, new_con
                 return False
             file_data = await response.json()
             file_sha  = file_data["sha"]
-            LOGGER(__name__).info(f"[change] Current file SHA: {file_sha}")
 
         new_content_encoded = base64.b64encode(new_content.encode("utf-8")).decode("utf-8")
         payload = {
@@ -49,7 +46,6 @@ async def update_github_file(repo_url: str, branch: str, file_name: str, new_con
         }
         async with session.put(file_url, json=payload) as response:
             if response.status == 200:
-                LOGGER(__name__).info(f"[change] File updated successfully: {file_name}")
                 return True
             else:
                 LOGGER(__name__).error(f"[change] Error updating file: HTTP {response.status}")
@@ -97,4 +93,6 @@ async def change(app, message):
     msg = await replyMessage(message, f'`Successfully Changed {key} = {value}, Now Restarting !`')
     with open(".restartmsg", "w") as f:
         f.write(f"{msg.chat.id}\n{msg.id}\n")
-    os.execl(sys.executable, sys.executable, '-B', "main.py")
+    # Use sys.exit on Heroku — os.execl does not work on Heroku's ephemeral filesystem.
+    # Heroku will automatically restart the dyno after exit.
+    sys.exit(0)
