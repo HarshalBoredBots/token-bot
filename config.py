@@ -4,7 +4,7 @@ import os
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
 API_ID = "20140875"
 API_HASH = "a06fa97d5a853ec2da79015b11335a17"
-CHANNEL_ID = os.environ.get("CHANNEL_ID", "-1003968507170")    # Database Channels
+CHANNEL_ID = "-1003968507170"                                  # Database Channels
 OWNER = "1828405916"                                           # Bot Owners Who Can Broadcast , Seperate By Space
 ADMINS = "7719103435 8674351020 1828405916 7025079982 5004882077 7820346667 7821627725"  # Bot Admins Who Can Generate Links , Seperate By Space
 DB_URL = os.environ.get("DB_URL", "")                         # MongoDB Url
