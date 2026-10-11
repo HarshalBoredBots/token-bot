@@ -6,30 +6,19 @@ import pytz
 
 load_dotenv("config.env", override=True)
 
-# ── Secrets (stay in config.env) ──────────────────────────────────────────────
+# ── Secrets ───────────────────────────────────────────────────────────────────
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
 
-# FIX: API_ID must be an int — Pyrogram's Client rejects a string.
-# os.environ always returns a string, so cast here.
-try:
-    API_ID = int(os.environ.get("API_ID", "0"))
-except ValueError:
-    API_ID = 0
+API_ID   = 20140875
+API_HASH = "a06fa97d5a853ec2da79015b11335a17"
 
-API_HASH = os.environ.get("API_HASH", "")
-
-# FIX: Guard against empty OWNER/ADMINS — "".split() returns [] (safe),
-# but a stray space like " ".split() also returns [] so this is fine.
-OWNER  = [int(x) for x in os.environ.get("OWNER",  "").split() if x.strip()]
-ADMINS = [int(x) for x in os.environ.get("ADMINS", "").split() if x.strip()]
+OWNER  = [1828405916]
+ADMINS = [7719103435, 8674351020, 1828405916, 7025079982, 5004882077, 7820346667, 7821627725]
 
 DB_URL  = os.environ.get("DB_URL", "")
-# FIX: DB_NAME default aligned to "yue" (matches config.env) instead of "filestore".
 DB_NAME = os.environ.get("DB_NAME", "yue")
 
 DOMAIN         = os.environ.get("DOMAIN", "")
-# FIX: PORT cast to int here so it is always numeric everywhere it is used.
-# On Heroku, $PORT is injected by the platform and must not be overridden in config.env.
 PORT           = int(os.environ.get("PORT", "8084"))
 CURRENT_REPO   = os.environ.get("UPSTREAM_REPO", "")
 CURRENT_BRANCH = os.environ.get("UPSTREAM_BRANCH", "main")
@@ -67,9 +56,9 @@ def _channel_id():
         except (ValueError, TypeError):
             pass
     try:
-        return int(os.environ.get("CHANNEL_ID", "0"))
+        return int(os.environ.get("CHANNEL_ID", "-1003968507170"))
     except ValueError:
-        return 0
+        return -1003968507170
 
 _DYNAMIC = {
     "FSUB":              lambda: as_id_list("FSUB"),
@@ -107,7 +96,7 @@ def _seed_from_env():
         "REQUEST_FSUB":      os.environ.get("REQUEST_FSUB", ""),
         "REQUEST_LINKS":     os.environ.get("REQUEST_LINKS", ""),
         "SESSION":           os.environ.get("SESSION", ""),
-        "CHANNEL_ID":        os.environ.get("CHANNEL_ID", ""),
+        "CHANNEL_ID":        os.environ.get("CHANNEL_ID", "-1003968507170"),
         "AUTO_DELETE":       os.environ.get("AUTO_DELETE", "0"),
         "PROTECT":           os.environ.get("PROTECT", "False"),
         "CUSTOM_CAPTION":    os.environ.get("CUSTOM_CAPTION", ""),
@@ -116,7 +105,6 @@ def _seed_from_env():
         "SHORTENER_SITE":    os.environ.get("SHORTENER_SITE", ""),
         "SHORTENER_API":     os.environ.get("SHORTENER_API", ""),
         "HOW_TO_DOWNLOAD":   os.environ.get("HOW_TO_DOWNLOAD", ""),
-        # FIX: seed uses "False" as default, consistent with config.env.
         "SHORTENER_PREMIUM": os.environ.get("SHORTENER_PREMIUM", "False"),
         "FAKE":              os.environ.get("FAKE", ""),
     }
