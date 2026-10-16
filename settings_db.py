@@ -43,6 +43,7 @@ DEFAULTS = {
     "HOW_TO_DOWNLOAD":   "",
     "SHORTENER_PREMIUM": "False",
     "FAKE":              "",
+    "PREMIUM_LINK":      "",
 }
 
 # ─── Metadata ─────────────────────────────────────────────────────────────────
@@ -65,6 +66,7 @@ FIELD_META = {
     "HOW_TO_DOWNLOAD":  {"label": "How-To-Download URL",        "type": "url",    "hint": "Telegram post link for tutorial button"},
     "SHORTENER_PREMIUM":{"label": "Skip Shortener for Premium", "type": "bool",   "hint": "Premium users bypass shortener"},
     "FAKE":             {"label": "Fake Buttons",               "type": "csv",    "hint": "Comma-separated name=url pairs"},
+    "PREMIUM_LINK":     {"label": "Premium Button URL",         "type": "url",    "hint": "Link shown on the Premium button (e.g. t.me/yourpremiumchannel)"},
 }
 
 CATEGORIES = {
@@ -72,7 +74,7 @@ CATEGORIES = {
     "reqfsub":  {"label": "🔐 Request FSUB",    "fields": ["TOGGLE", "REQUEST_FSUB", "REQUEST_LINKS", "SESSION"]},
     "database": {"label": "🗄 Database",         "fields": ["CHANNEL_ID"]},
     "other":    {"label": "⚙️ Other Config",     "fields": ["AUTO_DELETE", "PROTECT", "CUSTOM_CAPTION", "CHANNEL_BUTTON"]},
-    "token":    {"label": "🔑 Token System",     "fields": ["SHORTENER", "SHORTENER_SITE", "SHORTENER_API", "HOW_TO_DOWNLOAD", "SHORTENER_PREMIUM"]},
+    "token":    {"label": "🔑 Token System",     "fields": ["SHORTENER", "SHORTENER_SITE", "SHORTENER_API", "HOW_TO_DOWNLOAD", "SHORTENER_PREMIUM", "PREMIUM_LINK"]},
     "fake":     {"label": "🎭 Fake Buttons",     "fields": ["FAKE"]},
 }
 

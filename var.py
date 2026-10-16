@@ -70,6 +70,7 @@ _DYNAMIC = {
     "HOW_TO_DOWNLOAD":   lambda: get_setting("HOW_TO_DOWNLOAD"),
     "SHORTENER_PREMIUM": lambda: as_bool("SHORTENER_PREMIUM"),
     "FAKE":              lambda: as_csv_list("FAKE"),
+    "PREMIUM_LINK":      lambda: get_setting("PREMIUM_LINK"),
 }
 
 # ── One-time migration: seed hardcoded defaults → MongoDB if DB has no data ───
@@ -98,6 +99,7 @@ def _seed_from_env():
         "HOW_TO_DOWNLOAD":   os.environ.get("HOW_TO_DOWNLOAD", ""),
         "SHORTENER_PREMIUM": os.environ.get("SHORTENER_PREMIUM", "False"),
         "FAKE":              os.environ.get("FAKE", ""),
+        "PREMIUM_LINK":      os.environ.get("PREMIUM_LINK", ""),
     }
     updates = {k: v for k, v in env_map.items() if v}
     if updates:
@@ -128,6 +130,6 @@ __all__ = [
     "TOGGLE", "REQUEST_FSUB", "REQUEST_LINKS", "SESSION",
     "CHANNEL_ID", "AUTO_DELETE", "PROTECT", "CUSTOM_CAPTION", "CHANNEL_BUTTON",
     "SHORTENER", "SHORTENER_SITE", "SHORTENER_API", "HOW_TO_DOWNLOAD", "SHORTENER_PREMIUM",
-    "FAKE",
+    "FAKE", "PREMIUM_LINK",
     "_DYNAMIC",
 ]

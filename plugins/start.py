@@ -42,6 +42,7 @@ async def start(app, message):
     SHORTENER         = _DYNAMIC["SHORTENER"]()
     SHORTENER_PREMIUM = _DYNAMIC["SHORTENER_PREMIUM"]()
     HOW_TO_DOWNLOAD   = _DYNAMIC["HOW_TO_DOWNLOAD"]()
+    PREMIUM_LINK      = _DYNAMIC["PREMIUM_LINK"]()
     CUSTOM_CAPTION    = _DYNAMIC["CUSTOM_CAPTION"]()
     AUTO_DELETE       = _DYNAMIC["AUTO_DELETE"]()
     PROTECT           = _DYNAMIC["PROTECT"]()
@@ -57,11 +58,17 @@ async def start(app, message):
             if not short_link or not isinstance(short_link, str) or not short_link.startswith("http"):
                 short_link = original_url
 
-            # FIX 14: HOW_TO_DOWNLOAD button URL is now read from config
-            # instead of being hardcoded to a specific channel.
-            reply_markup = [[InlineKeyboardButton("📥 DOWNLOAD LINK 📥", url=short_link)]]
+            # Download button (top row, full width)
+            reply_markup = [[InlineKeyboardButton("• ᴄʟɪᴄᴋ ʜᴇʀᴇ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ •", url=short_link)]]
+
+            # Premium + Tutorial (second row, side by side when both are set)
+            second_row = []
+            if PREMIUM_LINK and isinstance(PREMIUM_LINK, str) and PREMIUM_LINK.startswith("http"):
+                second_row.append(InlineKeyboardButton("ᴘʀᴇᴍɪᴜᴍ", url=PREMIUM_LINK))
             if HOW_TO_DOWNLOAD and isinstance(HOW_TO_DOWNLOAD, str) and HOW_TO_DOWNLOAD.startswith("http"):
-                reply_markup.append([InlineKeyboardButton("Tutorial", url=HOW_TO_DOWNLOAD)])
+                second_row.append(InlineKeyboardButton("ᴛᴜᴛᴏʀɪᴀʟ", url=HOW_TO_DOWNLOAD))
+            if second_row:
+                reply_markup.append(second_row)
 
             await replyMessage(message, text_, reply_markup=InlineKeyboardMarkup(reply_markup))
             return await temp.delete()
